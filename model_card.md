@@ -42,76 +42,37 @@ Add the points up and each song has a grade between 0 and 100. We then sort all 
 
 ## 4. Data  
 
-Describe the dataset the model uses.  
-
-Prompts:  
-
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
+The catalog in `data/songs.csv` has 25 songs, expanded from the starter set in a recent commit, covering 13 genres (lofi, pop, indie pop, jazz, synthwave, ambient, rock, metal, hip hop, folk, EDM, country, classical) and 11 moods (such as happy, chill, focused, moody, intense and peaceful). Most genres have only one to four songs, and some moods have just one, so each listener's pool of good matches is small. Missing from the data are moods like "sad", many world and regional genres (for example k-pop or Latin), and anything about lyrics, language or era.
 
 ---
 
 ## 5. Strengths  
 
-Where does your system seem to work well  
-
-Prompts:  
-
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
+The system works best for listeners whose taste lines up with a well-represented genre and mood, such as Chill Lofi, High-Energy Pop and Deep Intense Rock, where the top results scored 0.91 to 0.97 and matched what I would have picked by hand. Weighting mood above genre lets close neighbors show up sensibly, like ambient tracks for a lofi fan or a hip hop track for a rock fan who wants intensity. The "because" reasons also make each result easy to check against intuition.
 
 ---
 
 ## 6. Limitations and Bias 
 
-Where the system struggles or behaves unfairly. 
-
-Prompts:  
-
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+The system ignores tempo preferences, lyrics, artist, language and listening history, and it assumes everyone wants a neutral, middling positivity level. Because mood is worth 30% of the grade, a listener who asks for a mood the catalog lacks (like "sad") gets no mood signal at all, and a listener with conflicting wishes (like a calm metal fan) is pulled toward whichever labels carry the most weight. The scoring also favors users whose taste matches the catalog's best-covered genres, while fans of one-song genres have almost nothing to choose from.
 
 ---
 
 ## 7. Evaluation  
 
-How you checked whether the recommender behaved as expected. 
-
-Prompts:  
-
-- Which user profiles you tested  
-- What you looked for in the recommendations  
-- What surprised you  
-- Any simple tests or comparisons you ran  
-
-No need for numeric metrics unless you created some.
+I ran six profiles through the recommender: three realistic ones (High-Energy Pop, Chill Lofi, Deep Intense Rock) and three adversarial ones (Energetic but Sad, Unknown Genre, Calm Metal Fan), and compared each top 5 against what I expected. The realistic profiles matched expectations, but I was surprised that the adversarial ones never failed visibly: a missing mood or genre was silently ignored, and the Calm Metal Fan still got an extremely loud song as its top pick. The full outputs are in the README under "Experiments You Tried".
 
 ---
 
 ## 8. Future Work  
 
-Ideas for how you would improve the model next.  
-
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
+Next I would let listeners set their own tempo, positivity and danceability targets instead of using stand-ins, and warn them when a requested mood or genre isn't in the catalog. I would also add a diversity step so the top five aren't all near-duplicates, and allow several favorite genres or moods per listener to handle mixed tastes. Finally, a larger and more varied catalog would make every one of these improvements easier to test.
 
 ---
 
 ## 9. Personal Reflection  
 
-A few sentences about your experience.  
+The biggest thing I learned is how simple it can be to recommend something to someone. With just a few preferences and a weighted score, the system produced believable results, which made me realize that recommendations on shopping sites like Amazon probably rest on the same basic idea, only with far more signals behind it.
 
-Prompts:  
+Something interesting I noticed is that the more data the system has, the better it gets at ranking items. With only 25 songs, a listener often had just one or two real matches and the rest of the top five were filler, while a bigger catalog and richer information about each listener would give the scoring more to work with. It also changed how I see recommendation apps: the suggestions feel personal, but they come from a handful of design choices, like which features to count and how much each one is worth, and those choices decide who gets good results.
 
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
